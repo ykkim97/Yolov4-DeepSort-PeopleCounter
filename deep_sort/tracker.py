@@ -7,7 +7,7 @@ from . import iou_matching
 from .track import Track
 
 
-class Tracker:
+class Tracker: #이 파일의 streo ?? 변수가 있는 객체에서 어떻게하면 streo??? 변수가 생기는지 볼
     """
     This is the multi-target tracker.
 
@@ -37,7 +37,7 @@ class Tracker:
 
     """
 
-    def __init__(self, metric, max_iou_distance=0.7, max_age=60, n_init=3):
+    def __init__(self, metric, max_iou_distance=0.7, max_age=60, n_init=3): # max_age value not same 
         self.metric = metric
         self.max_iou_distance = max_iou_distance
         self.max_age = max_age
@@ -55,7 +55,7 @@ class Tracker:
         for track in self.tracks:
             track.predict(self.kf)
 
-    def update(self, detections):
+    def update(self, detections, H):
         """Perform measurement update and track management.
 
         Parameters
@@ -75,7 +75,7 @@ class Tracker:
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
-            self._initiate_track(detections[detection_idx])
+            self._initiate_track(detections[detection_idx], H)
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
         # Update distance metric.
@@ -130,10 +130,50 @@ class Tracker:
         unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
         return matches, unmatched_tracks, unmatched_detections
 
-    def _initiate_track(self, detection):
+    def _initiate_track(self, detection, H):
         mean, covariance = self.kf.initiate(detection.to_xyah())
-        class_name = detection.get_class()
+        
+        
+#        t = Track(
+#            mean, covariance, self._next_id, self.n_init, self.max_age,
+#            detection.feature, class_name)
+        t = Track(
+            mean, covariance, self._next_id, self.n_init, self.max_age,
+            detection.feature) #add class_name 2020.12.06 여기2
+        box_t = t.to_tlbr()
+        startY, endY = int(box_t[1]), int(box_t[3])
+        yMidT = (endY + startY)/2
+        stateOutMetro = None
+        if (H/2 +50 - yMidT)>=0:
+            stateOutMetro = 1
+        elif (H/2 +50 - yMidT)<=0:
+            stateOutMetro = 0
+
+        class_name = detection.get_class() # add 2020.12.06
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature, class_name))
+            detection.feature, class_name, stateOutMetro, noConsider = False))# 여기3
         self._next_id += 1
+
+
+        # def _initiate_track(self, detection, H ):
+        #     mean, covariance = self.kf.initiate(detection.to_xyah())
+        #     t = Track(
+        #         mean, covariance, self._next_id, self.n_init, self.max_age,
+        #         detection.feature)
+        #     box_t = t.to_tlbr()
+        #     startY, endY = int(box_t[1]), int(box_t[3])
+        #     yMidT = (endY + startY)/2
+        #     stateOutMetro = None
+        #     if (H/2 +50 - yMidT)>=0:
+        #         stateOutMetro = 1 
+        #     elif (H/2 +50 - yMidT)<=0:
+        #         stateOutMetro = 0 
+
+        #     self.tracks.append(Track(
+        #         mean, covariance, self._next_id, self.n_init, self.max_age,
+        #         detection.feature, stateOutMetro, noConsider = False))
+        #     self._next_id += 1
+
+
+

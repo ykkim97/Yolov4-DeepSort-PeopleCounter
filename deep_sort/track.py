@@ -64,7 +64,7 @@ class Track:
     """
 
     def __init__(self, mean, covariance, track_id, n_init, max_age,
-                 feature=None, class_name=None):
+                 feature=None, class_name=None, stateOutMetro= None, noConsider = None): #7번째 매개변수 class_name=None 삭제 했음 여기5
         self.mean = mean
         self.covariance = covariance
         self.track_id = track_id
@@ -79,7 +79,10 @@ class Track:
 
         self._n_init = n_init
         self._max_age = max_age
-        self.class_name = class_name
+        self.class_name = class_name #여기6
+        if stateOutMetro is not None: # 현재 문제의 주원인 - 여기 조건에 걸려서 stateOutMetro가 생성이 안되어서 생기는 문제임
+            self.stateOutMetro = stateOutMetro #State of not being counted again passing the line 
+        self.noConsider = noConsider
 
     def to_tlwh(self):
         """Get current position in bounding box format `(top left x, top left y,
@@ -110,8 +113,8 @@ class Track:
         ret[2:] = ret[:2] + ret[2:]
         return ret
     
-    def get_class(self):
-        return self.class_name
+    def get_class(self): # 주석 처리 했음      여기4
+       return self.class_name # 주석 처리 했음 여기4
 
     def predict(self, kf):
         """Propagate the state distribution to the current time step using a
