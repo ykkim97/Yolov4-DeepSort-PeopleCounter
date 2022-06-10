@@ -30,13 +30,13 @@
 
 ## 구현 기능
 
-출입자 계측
-<img src="https://user-images.githubusercontent.com/17917009/173044941-84d0ed82-44cf-4bec-a7fd-09de967a7da6.png">
-계측화면에 나타난 붉은 선을 기준으로 출입자를 계측할 수 있습니다.
+출입자 계측  
+<img src="https://user-images.githubusercontent.com/17917009/173044941-84d0ed82-44cf-4bec-a7fd-09de967a7da6.png">  
+계측화면에 나타난 붉은 선을 기준으로 출입자를 계측할 수 있습니다.  
 
-통계정보 조회
-<img src="https://user-images.githubusercontent.com/17917009/173045400-00c4e062-96e6-4b64-94f0-2e8eb8d3b244.png">
-계측된 통계 정보를 웹페이지를 통해서 조회할 수 있습니다.
+통계정보 조회  
+<img src="https://user-images.githubusercontent.com/17917009/173045400-00c4e062-96e6-4b64-94f0-2e8eb8d3b244.png">  
+계측된 통계 정보를 웹페이지를 통해서 조회할 수 있습니다.  
 
 ## References
 
